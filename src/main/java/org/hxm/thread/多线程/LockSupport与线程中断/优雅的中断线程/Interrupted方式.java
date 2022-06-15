@@ -25,11 +25,47 @@ import java.util.concurrent.TimeUnit;
  *    private native boolean isInterrupted(boolean ClearInterrupted);
  *
  *    区别是 静态方法 ClearInterrupted = true,清除中断状态
- *          静态方法 ClearInterrupted = false,不清楚中断状态
+ *          实例方法 ClearInterrupted = false,不清楚中断状态
  *
  *
  */
 public class Interrupted方式 {
+
+
+  /**
+   * jvm源码
+   *
+   *void os::interrupt(Thread* thread) {
+   *   assert(!thread->is_Java_thread() || Thread::current() == thread || Threads_lock->owned_by_self(),
+   *          "possibility of dangling Thread pointer");
+   *
+   *   OSThread* osthread = thread->osthread();
+   *   osthread->set_interrupted(true);
+   *   // More than one thread can get here with the same value of osthread,
+   *   // resulting in multiple notifications.  We do, however, want the store
+   *   // to interrupted() to be visible to other threads before we post
+   *   // the interrupt event.
+   *   OrderAccess::release();
+   *   SetEvent(osthread->interrupt_event());
+   *   // For JSR166:  unpark after setting status
+   *   if (thread->is_Java_thread())
+   *     ((JavaThread*)thread)->parker()->unpark();
+   *
+   *   ParkEvent * ev = thread->_ParkEvent ;
+   *   if (ev != NULL) ev->unpark() ;
+   *
+   * }
+   *
+   *
+   * 大概可以看到 最下面调用了 unpark()
+   * 此处猜想 此处的unpark 也就是Locksupport 调用的unpark 线程继续执行
+   *
+   * 也刚好印证了 wait  会出现中断异常的原因：明明要等待 然后 interrupt 让我继续执行，所以 抛出中断异常，是否继续执行具体看用户
+   *
+   *
+   *
+   * @param args
+   */
   public static void main(String[] args) {
 
     Thread t1= new Thread(() -> {

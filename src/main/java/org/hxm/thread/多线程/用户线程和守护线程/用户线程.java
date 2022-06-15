@@ -27,7 +27,7 @@ public class 用户线程 {
       String str = daemon?"守护线程":"用户线程";
       System.out.println(str);
       while(true){
-        System.out.println("11111");
+        //System.out.println("11111");
       }
     },"a");
     t.start();

@@ -24,7 +24,43 @@ public class Sync方式实现 {
   private static String zimu = "ABCDEFG";
 
   public static void main(String[] args) {
+    new Thread(() -> {
+      synchronized (lockObj){
 
+        for (char c : shuzi.toCharArray()) {
+
+          System.out.println(c);
+          try {
+            lockObj.notify();
+            lockObj.wait();
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }finally {
+            lockObj.notify();
+          }
+
+
+        }
+      }
+
+    }).start();
+
+    new Thread(() -> {
+      synchronized (lockObj) {
+
+        for (char c : zimu.toCharArray()) {
+
+          System.out.println(c);
+          try {
+            lockObj.notify();
+            lockObj.wait();
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
+
+        }
+      }
+    }).start();
   }
 
   public static void mySleep() {

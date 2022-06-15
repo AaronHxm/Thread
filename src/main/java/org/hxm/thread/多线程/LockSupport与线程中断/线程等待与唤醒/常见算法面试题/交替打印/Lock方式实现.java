@@ -17,6 +17,10 @@ public class Lock方式实现 {
   static Condition t2condition = lock.newCondition();
   private static String shuzi = "1234567";
   private static String zimu = "ABCDEFG";
+
+  public static void main(String[] args) {
+    lock();
+  }
   private static void lock() {
     //t1 打印a之后
     Thread t1 = new Thread(() -> {

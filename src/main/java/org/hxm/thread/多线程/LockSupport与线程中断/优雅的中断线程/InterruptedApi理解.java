@@ -1,6 +1,7 @@
 package org.hxm.thread.多线程.LockSupport与线程中断.优雅的中断线程;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.LockSupport;
 
 /**
  * @author : Aaron
@@ -131,6 +132,7 @@ public class InterruptedApi理解 {
 
   public static void t4() {
     //获取当前线程的中断状态，并清除当前中断状态
+
     System.out.println(Thread.currentThread().getName()+"---"+Thread.interrupted());
     System.out.println(Thread.currentThread().getName()+"---"+Thread.interrupted());
     System.out.println("111111");
