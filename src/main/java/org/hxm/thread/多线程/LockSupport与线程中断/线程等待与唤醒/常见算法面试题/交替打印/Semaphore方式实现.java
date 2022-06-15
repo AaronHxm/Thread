@@ -1,6 +1,7 @@
 package org.hxm.thread.多线程.LockSupport与线程中断.线程等待与唤醒.常见算法面试题.交替打印;
 
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author : Aaron
@@ -13,6 +14,7 @@ public class Semaphore方式实现 {
   private static String shuzi = "1234567";
   private static String zimu = "ABCDEFG";
   static Semaphore semaphore = new Semaphore(1);
+  static Semaphore semaphore1 = new Semaphore(0);
 
   public static void main(String[] args) {
    Thread t1 = new Thread(() -> {
@@ -23,7 +25,8 @@ public class Semaphore方式实现 {
             semaphore.acquire();
             System.out.println(c);
 
-            semaphore.release();
+
+            semaphore1.release();
           }
         } catch (InterruptedException e) {
           e.printStackTrace();
@@ -35,9 +38,8 @@ public class Semaphore方式实现 {
 
         try {
           for (char c : zimu.toCharArray()) {
-            semaphore.acquire();
+            semaphore1.acquire();
             System.out.println(c);
-
             semaphore.release();
           }
         } catch (InterruptedException e) {
